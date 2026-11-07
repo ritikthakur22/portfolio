@@ -4,6 +4,21 @@ import { prefersReducedMotion, registerGsap } from "@/lib/motion";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+const LINK = /(https?:\/\/[^\s)]+[^\s).,]|\/projects\/[a-z0-9-]+|#contact)/g;
+
+/** Turns URLs, project pages and #contact in a reply into links. */
+function linkify(text: string) {
+  return text.split(LINK).map((part, i) =>
+    i % 2 ? (
+      <a key={i} href={part} {...(part.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})} className="text-accent underline underline-offset-2">
+        {part === "#contact" ? "contact form" : part}
+      </a>
+    ) : (
+      part
+    ),
+  );
+}
+
 const SUGGESTIONS = ["What has he built?", "What's his stack?", "How do I hire him?"];
 const GREETING: Msg = { role: "assistant", content: "Hi! I can tell you about Ritik's projects, skills and experience. What would you like to know?" };
 
@@ -101,7 +116,7 @@ export function ChatWidget({ open, anchor, onClose }: { open: boolean; anchor: R
                 : "max-w-[85%] rounded-2xl rounded-bl-md bg-surface-2 px-3.5 py-2.5 whitespace-pre-line"
             }
           >
-            {m.content}
+            {m.role === "assistant" ? linkify(m.content) : m.content}
           </p>
         ))}
         {busy && (

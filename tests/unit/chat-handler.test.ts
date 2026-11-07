@@ -79,3 +79,16 @@ test("greetings and thanks get a friendly reply without calling a model", async 
   expect(smallTalkReply("thanks a lot")).toMatch(/welcome/i);
   expect(smallTalkReply("what is his hobby")).toBeNull();
 });
+
+import { plainText } from "@/lib/chat-handler";
+
+test("markdown from models is turned into plain text", () => {
+  expect(plainText("Ritik built **eSkool** and __FastShare__ with `NestJS`.")).toBe("Ritik built eSkool and FastShare with NestJS.");
+  expect(plainText("See [the case study](/projects/eskool) or [GitHub](https://github.com/x).")).toBe("See the case study (/projects/eskool) or GitHub (https://github.com/x).");
+  expect(plainText("## Projects\n* one\n* two")).toBe("Projects\n- one\n- two");
+});
+
+test("replies are cleaned before they are returned", async () => {
+  const r = await handleChat({ messages: msgs(1) }, "ip", { providers: [ok("**eSkool** is live")], allow: allowAll });
+  expect(r.body).toEqual({ reply: "eSkool is live" });
+});

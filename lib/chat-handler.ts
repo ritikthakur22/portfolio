@@ -23,6 +23,17 @@ export function smallTalkReply(text: string): string | null {
   return null;
 }
 
+/** The chat shows plain text, but models still answer in Markdown now and then. */
+export function plainText(s: string) {
+  return s
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, "$1 ($2)")
+    .replace(/(\*\*|__)(.+?)\1/g, "$2")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^\s*[*•]\s+/gm, "- ")
+    .trim();
+}
+
 function parse(body: unknown): ChatMessage[] | null {
   const messages = (body as { messages?: unknown })?.messages;
   if (!Array.isArray(messages) || messages.length === 0) return null;
@@ -47,8 +58,8 @@ export async function handleChat(body: unknown, ip: string, deps: { providers: P
   }
   for (const provider of deps.providers) {
     try {
-      const reply = (await provider(messages)).trim();
-      if (reply) return { status: 200, body: { reply: unsafe(reply) ? REFUSAL : reply } };
+      const raw = await provider(messages);
+      if (raw.trim()) return { status: 200, body: { reply: unsafe(raw) ? REFUSAL : plainText(raw) } };
     } catch {
       // try the next provider
     }
