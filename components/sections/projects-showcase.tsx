@@ -13,7 +13,7 @@ export function ProjectsShowcase() {
       </div>
       <PinnedHorizontal>
         {featuredProjects.map((p) => (
-          <Tilt key={p.slug} className="w-full shrink-0 rounded-[28px] border border-border bg-surface md:w-[min(78vw,980px)]">
+          <Tilt key={p.slug} className="beam w-full shrink-0 rounded-[28px] border border-border bg-surface md:w-[min(78vw,980px)]">
             <TransitionLink href={`/projects/${p.slug}`} label={p.name} className="grid h-full gap-8 overflow-hidden rounded-[28px] p-7 sm:p-10 md:grid-cols-[1.25fr_1fr] md:items-center">
               <div className="relative z-20">
                 <p className="text-sm text-muted">{p.platforms.join(", ")}</p>
