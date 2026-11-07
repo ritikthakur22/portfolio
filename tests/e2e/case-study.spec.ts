@@ -27,3 +27,21 @@ test("project screenshots are served, including non-featured projects", async ({
     expect((await request.get(path)).status(), path).toBe(200);
   }
 });
+
+test("opening a project from far down the page starts at the top", async ({ page, isMobile }) => {
+  test.skip(isMobile, "smooth scrolling and pinning run on desktop");
+  await page.goto("/");
+  await page.waitForTimeout(1500); // let idle-started smooth scrolling and pinning kick in
+  await page.evaluate(() => document.getElementById("work")!.scrollIntoView());
+  await page.waitForTimeout(400);
+  // scroll fast and click while smooth scrolling is still gliding, like a real visitor
+  await page.mouse.move(600, 440);
+  for (let i = 0; i < 22; i++) {
+    await page.mouse.wheel(0, 110);
+    await page.waitForTimeout(40);
+  }
+  await page.mouse.click(600, 440);
+  await expect(page).toHaveURL(/\/projects\//);
+  await page.waitForTimeout(800);
+  expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+});
