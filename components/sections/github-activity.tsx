@@ -19,7 +19,7 @@ export async function GithubActivity() {
     <section id="github" className="scroll-mt-20 px-4 py-28 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeading intro={`${data.total} contributions on GitHub in the last year.`}>Always building.</SectionHeading>
-        <Ripple className="overflow-x-auto pb-2">
+        <Ripple className="overflow-x-auto pb-2" tabIndex={0} role="region" aria-label="GitHub contributions, scroll sideways for the full year">
           <div className="flex w-max gap-[3px]" role="img" aria-label={`GitHub contribution graph: ${data.total} contributions in the last year`}>
             {data.weeks.map((week, i) => (
               <div key={i} className="flex flex-col gap-[3px]" style={{ "--w": i } as React.CSSProperties}>
