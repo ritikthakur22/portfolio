@@ -41,6 +41,7 @@ My personal site. It shows the apps I've built and shipped, from a school ERP on
 - **Command palette** on `Ctrl K` or `/` to jump anywhere, switch theme, copy my email or download my resume.
 - **Light and dark themes** with a circular reveal, following your system setting by default.
 - **Contact form** that sends through my own domain, with a backup sender, spam protection and an automatic reply.
+- **Resume on request.** The public PDF leaves out my phone number; anyone can have the full version emailed to them in one step.
 - **A 404 page** with an eye that keeps looking for the page you wanted.
 
 Every animation respects the reduced-motion setting, and all content is readable without JavaScript.
@@ -94,6 +95,7 @@ Open http://localhost:3000. The site works without any keys: the assistant shows
 | `CONTACT_TO` | Inbox that receives contact messages |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Spam check on the form |
 | `GITHUB_TOKEN` | Read-only token for the GitHub activity section |
+| `RESUME_FULL_URL` | Private direct-download link to the full resume, emailed on request (falls back to the public copy) |
 
 Keys live in `.env` locally and in the Vercel project settings in production. They are never committed.
 

@@ -7,6 +7,7 @@ import { Providers } from "@/components/providers";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { PaletteLoader } from "@/components/ui/palette-loader";
+import { ResumeDialog } from "@/components/ui/resume-dialog";
 import { profile } from "@/content/profile";
 import { jsonLdScript, personJsonLd, SITE_TITLE, SITE_URL, TAB_TITLE } from "@/lib/seo";
 import "./globals.css";
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Curtain />
           <ChatLauncher />
           <PaletteLoader />
+          <ResumeDialog />
         </Providers>
       </body>
     </html>

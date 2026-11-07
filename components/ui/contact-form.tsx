@@ -2,14 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { validateContact, type ContactData, type ContactErrors } from "@/lib/validate";
+import { useTurnstile } from "./use-turnstile";
 
-declare global {
-  interface Window {
-    turnstile?: { render: (el: HTMLElement, opts: Record<string, unknown>) => string; reset: (id?: string) => void };
-  }
-}
-
-const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 type Status = "idle" | "sending" | "sent" | "error";
 
 const field =
@@ -21,38 +15,10 @@ export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [note, setNote] = useState("");
   const startedAt = useRef(0);
-  const captcha = useRef<HTMLDivElement>(null);
-  const widget = useRef<string | undefined>(undefined);
-  const token = useRef("");
+  const { captcha, token, reset } = useTurnstile();
 
   useEffect(() => {
     startedAt.current = Date.now();
-  }, []);
-
-  // load Turnstile only when the form is about to be seen
-  useEffect(() => {
-    if (!SITE_KEY || !captcha.current) return;
-    const el = captcha.current;
-    const io = new IntersectionObserver(([en]) => {
-      if (!en.isIntersecting) return;
-      io.disconnect();
-      const render = () => {
-        widget.current = window.turnstile?.render(el, {
-          sitekey: SITE_KEY,
-          theme: document.documentElement.classList.contains("light") ? "light" : "dark",
-          callback: (t: string) => (token.current = t),
-          "expired-callback": () => (token.current = ""),
-        });
-      };
-      if (window.turnstile) return render();
-      const s = document.createElement("script");
-      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-      s.async = true;
-      s.onload = render;
-      document.head.appendChild(s);
-    }, { rootMargin: "300px" });
-    io.observe(el);
-    return () => io.disconnect();
   }, []);
 
   const set = (k: keyof ContactData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -86,8 +52,7 @@ export function ContactForm() {
       setStatus("error");
       setNote("Couldn't reach the server. Check your connection and try again.");
     }
-    if (widget.current) window.turnstile?.reset(widget.current);
-    token.current = "";
+    reset();
   }
 
   const err = (k: keyof ContactData) =>

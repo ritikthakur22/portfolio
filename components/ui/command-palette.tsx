@@ -1,4 +1,4 @@
-import { ArrowRight, Bot, Copy, Download, FolderOpen, SunMoon } from "lucide-react";
+import { ArrowRight, Bot, Copy, Download, FolderOpen, Mail, SunMoon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -61,6 +61,14 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
           const a = Object.assign(document.createElement("a"), { href: profile.resumePath, download: "Ritik_Thakur_Resume.pdf" });
           a.click();
         },
+      },
+      {
+        id: "resume-email",
+        label: "Email me the full resume",
+        hint: "Sent to your inbox",
+        keywords: "cv resume mail",
+        icon: <Mail className="size-4" />,
+        run: () => dispatchEvent(new Event("open-resume")),
       },
       { id: "chat", label: "Ask the AI about Ritik", hint: "Chat", keywords: "bot assistant question", icon: <Bot className="size-4" />, run: () => dispatchEvent(new Event("open-chat")) },
     ];

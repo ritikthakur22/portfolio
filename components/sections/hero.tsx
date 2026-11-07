@@ -4,6 +4,7 @@ import { Magnetic } from "@/components/motion/magnetic";
 import { Reveal } from "@/components/motion/reveal";
 import { ScrollFade } from "@/components/motion/scroll-fade";
 import { SplitReveal } from "@/components/motion/split-reveal";
+import { ResumeLink } from "@/components/ui/resume-link";
 import { profile } from "@/content/profile";
 
 export function Hero() {
@@ -44,6 +45,7 @@ export function Hero() {
               </a>
             </Magnetic>
           </div>
+          <ResumeLink className="mt-4 text-sm text-muted underline decoration-border underline-offset-4 transition-colors hover:text-accent hover:decoration-accent" />
           <dl className="mt-16 flex flex-wrap gap-x-12 gap-y-6">
             {profile.stats.map((s) => (
               <div key={s.label} className="flex flex-col-reverse">
