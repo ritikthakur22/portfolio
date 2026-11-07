@@ -88,6 +88,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
             {project.body.map((para) => (
               <p key={para}>{para}</p>
             ))}
+            {project.credit && <p className="pt-2 text-xs text-muted">{project.credit}</p>}
           </div>
         </div>
 

@@ -50,3 +50,10 @@ describe("content", () => {
     for (const p of moreProjects) expect(p.featured).toBe(false);
   });
 });
+
+test("FastShare carries a small PairDrop credit without a link", () => {
+  const fs = getProject("fastshare")!;
+  expect(fs.credit).toBe("Built on the open-source PairDrop project (GPL-3.0).");
+  expect(JSON.stringify(fs.links)).not.toMatch(/pairdrop/i);
+  expect(fs.body.join(" ")).not.toMatch(/pairdrop/i);
+});

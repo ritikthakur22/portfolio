@@ -32,12 +32,17 @@ export const projects: Project[] = [
     summary: "Share files and clipboard text between nearby devices, straight from the browser or the Android app, with no account and no cloud upload.",
     stack: ["WebRTC", "WebSockets", "Node.js", "JavaScript", "Android"],
     platforms: ["Android", "iOS", "Web"],
-    links: [play("com.crdy.fastshare"), { label: "Live web app", href: "https://fastshare.ritikthakur.com.np" }, gh("FastShare")],
+    links: [
+      play("com.crdy.fastshare"),
+      { label: "Live web app", href: "https://fastshare.ritikthakur.com.np" },
+      gh("FastShare"),
+    ],
     playStoreId: "com.crdy.fastshare",
     image: "/projects/fastshare/1.webp",
     images: shots("fastshare", 2),
     year: "2026",
     featured: true,
+    credit: "Built on the open-source PairDrop project (GPL-3.0).",
     body: [
       "FastShare sends files and clipboard text directly between devices on the same network. Open it on two devices and they find each other; files go device to device over WebRTC and never touch a server.",
       "The frontend is plain HTML, CSS and JavaScript hosted on Vercel. A small Node.js WebSocket signaling server on Render only helps devices discover each other before the direct connection starts.",

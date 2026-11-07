@@ -16,6 +16,8 @@ export type Project = {
   featured: boolean;
   /** Case-study paragraphs. Empty for non-featured projects. */
   body: string[];
+  /** Small attribution shown at the foot of the case study. */
+  credit?: string;
 };
 
 export type Role = { title: string; org: string; orgUrl?: string; period: string; points: string[] };
