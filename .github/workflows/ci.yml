@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - run: npm install -g npm@12  # match the npm that writes package-lock.json
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
