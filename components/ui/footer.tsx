@@ -1,4 +1,5 @@
 import { cacheLife } from "next/cache";
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { profile } from "@/content/profile";
 
 async function year() {
@@ -11,10 +12,9 @@ export async function Footer() {
   return (
     <footer className="overflow-hidden border-t border-border px-4 pt-24 pb-10 sm:px-8">
       <div className="mx-auto max-w-7xl">
-        <p className="font-mono text-xs tracking-[0.14em] text-accent uppercase">Let&apos;s build something</p>
-        <p className="mt-4 font-display text-[clamp(56px,15vw,240px)] leading-[0.85] font-extrabold tracking-[-0.05em] uppercase" data-outro>
+        <SplitReveal as="p" type="words" className="font-display text-[clamp(56px,15vw,240px)] leading-[0.85] font-extrabold tracking-[-0.05em] uppercase">
           Ritik <span className="text-accent">Thakur</span>
-        </p>
+        </SplitReveal>
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4 font-mono text-sm text-muted">
           <ul className="flex flex-wrap gap-6">
             {profile.socials.map((s) => (

@@ -10,11 +10,13 @@ type Props = {
   /** "mount" plays immediately (hero); "scroll" plays when 85% into view. */
   trigger?: "mount" | "scroll";
   delay?: number;
+  /** Play only once per browser session (sessionStorage key). */
+  onceKey?: string;
   className?: string;
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLElement>;
 
-export function SplitReveal({ as: Tag = "h2", type = "chars", trigger = "scroll", delay = 0, className, children, ...rest }: Props) {
+export function SplitReveal({ as: Tag = "h2", type = "chars", trigger = "scroll", delay = 0, onceKey, className, children, ...rest }: Props) {
   const ref = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -22,6 +24,12 @@ export function SplitReveal({ as: Tag = "h2", type = "chars", trigger = "scroll"
       const gsap = registerGsap();
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
+        if (onceKey) {
+          try {
+            if (sessionStorage.getItem(onceKey)) return;
+            sessionStorage.setItem(onceKey, "1");
+          } catch {}
+        }
         const split = SplitText.create(ref.current!, { type: type === "lines" ? "lines" : `words,${type}`, mask: type === "lines" ? "lines" : "words" });
         const targets = type === "chars" ? split.chars : type === "words" ? split.words : split.lines;
         gsap.from(targets, {
