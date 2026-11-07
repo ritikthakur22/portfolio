@@ -28,7 +28,7 @@
 My personal site. It shows the apps I've built and shipped, from a school ERP on Google Play to a peer-to-peer file sharing tool, and it has a small AI assistant that answers questions about my work.
 
 <p align="center">
-  <img src="docs/readme/demo.gif" alt="Scrolling through the site: animated hero, pinned project showcase, page transition and the chat assistant" width="100%">
+  <img src="docs/readme/demo.gif" alt="Scrolling through the site: animated hero, pinned project showcase, a case study and the chat assistant" width="100%">
 </p>
 
 ## What's on the site
@@ -93,7 +93,7 @@ Open http://localhost:3000. The site works without any keys: the assistant shows
 | `RESEND_API_KEY` | Sends contact emails from contact@ritikthakur.com.np |
 | `EMAIL_USER`, `EMAIL_APP_PASSWORD` | Gmail backup sender (an app password, not your login) |
 | `CONTACT_TO` | Inbox that receives contact messages |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Spam check on the form |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Spam check on the contact and resume forms |
 | `GITHUB_TOKEN` | Read-only token for the GitHub activity section |
 | `RESUME_FULL_URL` | Private direct-download link to the full resume, emailed on request (falls back to the public copy) |
 
@@ -114,7 +114,7 @@ To update the site, edit the files in `content/`. The pages, the assistant, the 
 
 ## Deploying
 
-Pushes to `main` deploy to Vercel automatically. Add the environment variables in Vercel before the first deploy, then redeploy whenever you change them.
+Pushes to `main` deploy to Vercel automatically. Add the environment variables in Vercel before the first deploy, then redeploy whenever you change them. Variables starting with `NEXT_PUBLIC_` are built into the page, so after changing one, redeploy with **Use existing Build Cache** turned off. Mark secret keys as **Sensitive** in Vercel.
 
 ## License
 
