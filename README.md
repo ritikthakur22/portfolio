@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://www.ritikthakur.com.np"><img src="https://img.shields.io/badge/live-ritikthakur.com.np-2dd4bf?style=for-the-badge&labelColor=0b0d0e" alt="Live site"></a>
-  <a href="https://github.com/ritikthakur22/ritikthakur-site/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ritikthakur22/ritikthakur-site/ci.yml?style=for-the-badge&label=CI&labelColor=0b0d0e" alt="CI status"></a>
+  <a href="https://github.com/ritikthakur22/portfolio/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ritikthakur22/portfolio/ci.yml?style=for-the-badge&label=CI&labelColor=0b0d0e" alt="CI status"></a>
 </p>
 
 <p align="center">
@@ -64,8 +64,8 @@ Everything runs on free tiers.
 You need Node.js 22 or newer.
 
 ```bash
-git clone https://github.com/ritikthakur22/ritikthakur-site.git
-cd ritikthakur-site
+git clone https://github.com/ritikthakur22/portfolio.git
+cd portfolio
 npm install
 cp .env.example .env   # then fill in the keys you have
 npm run dev
