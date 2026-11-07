@@ -1,30 +1,26 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
-import { MOTION_OK, registerGsap } from "@/lib/motion";
+import { useEffect, useRef } from "react";
+import { MOTION_OK } from "@/lib/motion";
 
-/** Children marked data-cell pop in as a wave across the grid when scrolled into view. */
+/**
+ * Cells marked data-cell pop in as a wave across columns (each column sets --w) when scrolled into view.
+ * Pure CSS animation: hundreds of per-cell JS tweens blocked the main thread for seconds.
+ */
 export function Ripple({ children, className = "", ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   const ref = useRef<HTMLDivElement>(null);
-  useGSAP(
-    () => {
-      const gsap = registerGsap();
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_OK, () => {
-        gsap.from("[data-cell]", {
-          scale: 0,
-          opacity: 0,
-          duration: 0.4,
-          ease: "back.out(2)",
-          stagger: { each: 0.002, from: "start" },
-          scrollTrigger: { trigger: ref.current, start: "top 85%" },
-        });
-      });
-      return () => mm.revert();
-    },
-    { scope: ref },
-  );
+  useEffect(() => {
+    const el = ref.current!;
+    if (!window.matchMedia(MOTION_OK).matches) return;
+    el.dataset.ripple = "armed";
+    const io = new IntersectionObserver(([en]) => {
+      if (!en.isIntersecting) return;
+      el.dataset.ripple = "in";
+      io.disconnect();
+    }, { rootMargin: "0px 0px -15% 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
     <div ref={ref} className={className} {...rest}>
       {children}

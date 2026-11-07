@@ -22,7 +22,7 @@ export async function GithubActivity() {
         <Ripple className="overflow-x-auto pb-2">
           <div className="flex w-max gap-[3px]" role="img" aria-label={`GitHub contribution graph: ${data.total} contributions in the last year`}>
             {data.weeks.map((week, i) => (
-              <div key={i} className="flex flex-col gap-[3px]">
+              <div key={i} className="flex flex-col gap-[3px]" style={{ "--w": i } as React.CSSProperties}>
                 {week.map((d) => (
                   <span key={d.date} data-cell title={`${d.count} on ${d.date}`} className="size-[11px] rounded-[3px]" style={{ background: level(d.count) }} />
                 ))}

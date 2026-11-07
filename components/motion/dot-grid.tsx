@@ -31,15 +31,19 @@ export function DotGrid({ className = "" }: { className?: string }) {
     let visible = false;
     let accent = "#2dd4bf";
     let idle = "#2a3236";
+    let w = 0;
+    let h = 0;
 
     const size = () => {
       const r = window.devicePixelRatio || 1;
-      cv.width = cv.offsetWidth * r;
-      cv.height = cv.offsetHeight * r;
+      w = cv.offsetWidth;
+      h = cv.offsetHeight;
+      cv.width = w * r;
+      cv.height = h * r;
       ctx.setTransform(r, 0, 0, r, 0, 0);
       dots = [];
-      for (let x = GAP / 2; x < cv.offsetWidth; x += GAP)
-        for (let y = GAP / 2; y < cv.offsetHeight; y += GAP) dots.push({ x, y, ox: x, oy: y });
+      for (let x = GAP / 2; x < w; x += GAP)
+        for (let y = GAP / 2; y < h; y += GAP) dots.push({ x, y, ox: x, oy: y });
       const cs = getComputedStyle(cv);
       accent = cs.getPropertyValue("--accent").trim() || accent;
       idle = cs.getPropertyValue("--border").trim() || idle;
@@ -52,7 +56,7 @@ export function DotGrid({ className = "" }: { className?: string }) {
     const io = new IntersectionObserver(([en]) => (visible = en.isIntersecting));
     const tick = () => {
       if (!visible) return;
-      ctx.clearRect(0, 0, cv.offsetWidth, cv.offsetHeight);
+      ctx.clearRect(0, 0, w, h);
       for (const d of dots) {
         const dx = d.ox - mouse.x;
         const dy = d.oy - mouse.y;

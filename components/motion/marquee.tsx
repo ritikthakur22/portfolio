@@ -22,17 +22,26 @@ export function Marquee({ words, reverse = false, ...rest }: { words: string[]; 
           boost = Math.min(Math.abs(s.getVelocity()) / 300, 12);
         },
       });
+      const el = row.current!;
+      // reading scrollWidth after a transform write forces layout every frame, so measure only on resize
+      let width = el.scrollWidth / 2;
+      const ro = new ResizeObserver(() => (width = el.scrollWidth / 2));
+      ro.observe(el);
+      let visible = false;
+      const io = new IntersectionObserver(([en]) => (visible = en.isIntersecting));
+      io.observe(el);
       const tick = () => {
-        const el = row.current;
-        if (!el) return;
+        if (!visible) return;
         x -= (1 + boost) * dir;
         boost *= 0.92;
-        el.style.transform = `translate3d(${wrapOffset(x, el.scrollWidth / 2)}px,0,0)`;
+        el.style.transform = `translate3d(${wrapOffset(x, width)}px,0,0)`;
       };
       gsap.ticker.add(tick);
       return () => {
         gsap.ticker.remove(tick);
         st.kill();
+        ro.disconnect();
+        io.disconnect();
       };
     });
     return () => mm.revert();
