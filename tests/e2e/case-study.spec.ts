@@ -12,14 +12,14 @@ test("unknown project is a 404", async ({ page }) => {
   expect(res?.status()).toBe(404);
 });
 
-test("opening a project plays the curtain then navigates", async ({ page }) => {
+test("opening a project navigates straight there with no curtain", async ({ page }) => {
   await page.goto("/");
   const card = page.locator("#work a", { hasText: "FastShare" });
   await card.scrollIntoViewIfNeeded();
   await card.click();
-  await expect(page.locator('[data-curtain="open"]')).toContainText("FastShare");
   await expect(page).toHaveURL(/\/projects\/fastshare$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("FastShare");
+  await expect(page.locator("[data-curtain]")).toHaveCount(0);
 });
 
 test("project screenshots are served, including non-featured projects", async ({ request }) => {

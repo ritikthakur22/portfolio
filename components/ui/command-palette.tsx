@@ -2,7 +2,6 @@ import { ArrowRight, Bot, Copy, Download, FolderOpen, Mail, SunMoon } from "luci
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CURTAIN_EVENT } from "@/components/motion/curtain";
 import { profile } from "@/content/profile";
 import { featuredProjects } from "@/content/projects";
 import { prefersReducedMotion } from "@/lib/motion";
@@ -36,11 +35,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         hint: "Case study",
         keywords: p.tagline,
         icon: <FolderOpen className="size-4" />,
-        run: () => {
-          const href = `/projects/${p.slug}`;
-          if (prefersReducedMotion()) router.push(href);
-          else dispatchEvent(new CustomEvent(CURTAIN_EVENT, { detail: { href, label: p.name } }));
-        },
+        run: () => router.push(`/projects/${p.slug}`),
       })),
       { id: "theme", label: "Toggle theme", hint: "Light / dark", keywords: "dark light mode", icon: <SunMoon className="size-4" />, run: () => setTheme(resolvedTheme === "light" ? "dark" : "light") },
       {

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
-import { TransitionLink } from "@/components/ui/transition-link";
+import Link from "next/link";
 import { featuredProjects, getProject } from "@/content/projects";
 import { breadcrumbJsonLd, jsonLdScript, projectJsonLd } from "@/lib/seo";
 
@@ -35,9 +35,9 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(projectJsonLd(project))} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd(project))} />
       <div className="mx-auto max-w-6xl">
-        <TransitionLink href="/#work" label="Work" className="text-sm text-muted transition-colors hover:text-accent">
+        <Link href="/#work" className="text-sm text-muted transition-colors hover:text-accent">
           Back to work
-        </TransitionLink>
+        </Link>
         <header className="mt-10 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end">
           <div>
             <p className="text-muted">{project.platforms.join(", ")}</p>
@@ -92,16 +92,15 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           </div>
         </div>
 
-        <TransitionLink
+        <Link
           href={`/projects/${next.slug}`}
-          label={next.name}
           className="group mt-24 block border-t border-border pt-10"
         >
           <span className="text-sm text-muted">Next project</span>
           <span className="mt-2 block font-display text-[clamp(40px,7vw,96px)] leading-none font-extrabold tracking-[-0.04em] transition-colors group-hover:text-accent">
             {next.name}
           </span>
-        </TransitionLink>
+        </Link>
       </div>
     </article>
   );

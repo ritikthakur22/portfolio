@@ -35,7 +35,7 @@ My personal site. It shows the apps I've built and shipped, from a school ERP on
 
 - **Kinetic hero.** The headline assembles letter by letter, a soft glow follows the cursor and the buttons lean toward it.
 - **Pinned project showcase.** Featured apps slide sideways as you scroll, with 3D tilt, a spotlight and a light beam around each card. On phones it becomes a simple vertical list.
-- **Case-study pages** for each featured app, opened through a full-screen teal curtain.
+- **Case-study pages** for each featured app, with screenshots, stack and links.
 - **Stacking experience cards**, scroll-reactive text bands, hover previews for smaller projects, a cursor-reactive dot grid and live GitHub activity.
 - **Chat assistant** in the corner: a draggable bubble whose eyes follow your cursor. It only answers questions about me and my projects, and politely declines anything else. Type `ritik` anywhere on the page to say hi to it.
 - **Command palette** on `Ctrl K` or `/` to jump anywhere, switch theme, copy my email or download my resume.
