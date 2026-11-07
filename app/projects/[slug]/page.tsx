@@ -4,9 +4,23 @@ import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
 import { TransitionLink } from "@/components/ui/transition-link";
 import { featuredProjects, getProject } from "@/content/projects";
+import { breadcrumbJsonLd, jsonLdScript, projectJsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return featuredProjects.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({ params }: PageProps<"/projects/[slug]">) {
+  const p = getProject((await params).slug);
+  if (!p) return {};
+  const title = `${p.name}: ${p.tagline}`;
+  return {
+    title,
+    description: p.summary,
+    alternates: { canonical: `/projects/${p.slug}` },
+    openGraph: { type: "article", title, description: p.summary, url: `/projects/${p.slug}` },
+    twitter: { card: "summary_large_image", title, description: p.summary },
+  };
 }
 
 export default async function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
@@ -18,6 +32,8 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
 
   return (
     <article className="px-4 pt-32 pb-24 sm:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(projectJsonLd(project))} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd(project))} />
       <div className="mx-auto max-w-6xl">
         <TransitionLink href="/#work" label="Work" className="text-sm text-muted transition-colors hover:text-accent">
           Back to work
