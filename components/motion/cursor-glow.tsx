@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import { DESKTOP_MOTION, registerGsap } from "@/lib/motion";
+import { DESKTOP_MOTION, registerGsap, whenIdle } from "@/lib/motion";
 
 export function CursorGlow() {
   const ref = useRef<HTMLDivElement>(null);
@@ -10,6 +10,7 @@ export function CursorGlow() {
   useGSAP(() => {
     const gsap = registerGsap();
     const mm = gsap.matchMedia();
+    const cancel = whenIdle(() =>
     mm.add(DESKTOP_MOTION, () => {
       gsap.set(ref.current, { autoAlpha: 1 });
       const x = gsap.quickTo(ref.current, "x", { duration: 0.6, ease: "power3" });
@@ -17,8 +18,12 @@ export function CursorGlow() {
       const move = (e: PointerEvent) => (x(e.clientX), y(e.clientY));
       window.addEventListener("pointermove", move);
       return () => window.removeEventListener("pointermove", move);
-    });
-    return () => mm.revert();
+    }),
+    );
+    return () => {
+      cancel();
+      mm.revert();
+    };
   });
 
   return (

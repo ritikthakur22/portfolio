@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { clampPosition } from "@/lib/clamp";
-import { prefersReducedMotion, registerGsap } from "@/lib/motion";
+import { prefersReducedMotion, registerGsap, whenIdle } from "@/lib/motion";
 import { BotIcon } from "./bot-icon";
 
 const ChatWidget = dynamic(() => import("./chat-widget").then((m) => m.ChatWidget), { ssr: false });
@@ -41,6 +41,13 @@ export function ChatLauncher() {
   // eyes follow the cursor (or the chat input while typing), blink, float
   useEffect(() => {
     if (prefersReducedMotion()) return;
+    let cleanup: (() => void) | undefined;
+    const cancel = whenIdle(() => (cleanup = startEyes()));
+    return () => {
+      cancel();
+      cleanup?.();
+    };
+    function startEyes() {
     const gsap = registerGsap();
     const aim = (x: number, y: number) => {
       const b = button.current?.getBoundingClientRect();
@@ -72,6 +79,7 @@ export function ChatLauncher() {
       clearTimeout(timer);
       float.kill();
     };
+    }
   }, []);
 
   // easter egg: type "ritik" anywhere (outside inputs) and the bot waves

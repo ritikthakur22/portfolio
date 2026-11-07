@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { useRef, useState } from "react";
-import { DESKTOP_MOTION, registerGsap } from "@/lib/motion";
+import { DESKTOP_MOTION, registerGsap, whenIdle } from "@/lib/motion";
 
 export type PreviewItem = { label: string; meta: string; image: string; href: string };
 
@@ -25,14 +25,19 @@ export function HoverPreview({ items, ...rest }: { items: PreviewItem[] } & Reac
   useGSAP(() => {
     const gsap = registerGsap();
     const mm = gsap.matchMedia();
-    mm.add(DESKTOP_MOTION, () => {
-      const x = gsap.quickTo(box.current, "x", { duration: 0.45, ease: "power3" });
-      const y = gsap.quickTo(box.current, "y", { duration: 0.45, ease: "power3" });
-      const move = (e: PointerEvent) => (x(e.clientX + 40), y(e.clientY - 90));
-      window.addEventListener("pointermove", move);
-      return () => window.removeEventListener("pointermove", move);
-    });
-    return () => mm.revert();
+    const cancel = whenIdle(() =>
+      mm.add(DESKTOP_MOTION, () => {
+        const x = gsap.quickTo(box.current, "x", { duration: 0.45, ease: "power3" });
+        const y = gsap.quickTo(box.current, "y", { duration: 0.45, ease: "power3" });
+        const move = (e: PointerEvent) => (x(e.clientX + 40), y(e.clientY - 90));
+        window.addEventListener("pointermove", move);
+        return () => window.removeEventListener("pointermove", move);
+      }),
+    );
+    return () => {
+      cancel();
+      mm.revert();
+    };
   });
 
   function show(item: PreviewItem | null) {

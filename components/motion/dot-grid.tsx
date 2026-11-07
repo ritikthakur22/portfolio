@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { DESKTOP_MOTION, registerGsap } from "@/lib/motion";
+import { DESKTOP_MOTION, registerGsap, whenIdle } from "@/lib/motion";
 
 const GAP = 26;
 const RADIUS = 120;
@@ -15,9 +15,12 @@ export function DotGrid({ className = "" }: { className?: string }) {
   useEffect(() => {
     const mq = window.matchMedia(DESKTOP_MOTION);
     const sync = () => setEnabled(mq.matches);
-    sync();
+    const cancel = whenIdle(sync);
     mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    return () => {
+      cancel();
+      mq.removeEventListener("change", sync);
+    };
   }, []);
 
   useEffect(() => {

@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { Children, useRef } from "react";
-import { MOTION_OK, registerGsap } from "@/lib/motion";
+import { MOTION_OK, registerGsap, whenIdle } from "@/lib/motion";
 
 /** Cards stick and pile up; the card underneath scales back and dims as the next one slides over it. */
 export function StackCards({ children, className = "", ...rest }: React.HTMLAttributes<HTMLDivElement>) {
@@ -13,6 +13,7 @@ export function StackCards({ children, className = "", ...rest }: React.HTMLAttr
     () => {
       const gsap = registerGsap();
       const mm = gsap.matchMedia();
+      const cancel = whenIdle(() =>
       mm.add(MOTION_OK, () => {
         const cards = gsap.utils.toArray<HTMLElement>("[data-stack-card]", ref.current);
         cards.slice(0, -1).forEach((card, i) => {
@@ -23,8 +24,12 @@ export function StackCards({ children, className = "", ...rest }: React.HTMLAttr
             scrollTrigger: { trigger: cards[i + 1], start: "top bottom", end: `top ${110 + (i + 1) * 20}px`, scrub: true },
           });
         });
-      });
-      return () => mm.revert();
+      }),
+      );
+      return () => {
+        cancel();
+        mm.revert();
+      };
     },
     { scope: ref },
   );

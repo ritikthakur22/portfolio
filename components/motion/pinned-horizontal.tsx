@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import { DESKTOP_MOTION, registerGsap } from "@/lib/motion";
+import { DESKTOP_MOTION, registerGsap, whenIdle } from "@/lib/motion";
 
 /**
  * Server markup is a vertical stack (readable without JS and on touch).
@@ -15,6 +15,7 @@ export function PinnedHorizontal({ children, className = "", ...rest }: React.HT
   useGSAP(() => {
     const gsap = registerGsap();
     const mm = gsap.matchMedia();
+    const cancel = whenIdle(() =>
     mm.add(DESKTOP_MOTION, () => {
       const t = track.current!;
       t.dataset.pinned = "true";
@@ -25,8 +26,12 @@ export function PinnedHorizontal({ children, className = "", ...rest }: React.HT
         scrollTrigger: { trigger: wrap.current, pin: true, scrub: 1, start: "top top", end: () => `+=${distance()}`, invalidateOnRefresh: true },
       });
       return () => delete t.dataset.pinned;
-    });
-    return () => mm.revert();
+    }),
+    );
+    return () => {
+      cancel();
+      mm.revert();
+    };
   });
 
   return (

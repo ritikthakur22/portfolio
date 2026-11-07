@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import { registerGsap } from "@/lib/motion";
+import { registerGsap, whenIdle } from "@/lib/motion";
 import { ThemeToggle } from "./theme-toggle";
 
 const links = [
@@ -18,7 +18,13 @@ export function Nav() {
 
   useGSAP(() => {
     const gsap = registerGsap();
-    gsap.to(bar.current, { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: true } });
+    let tween: gsap.core.Tween | undefined;
+    const cancel = whenIdle(() => (tween = gsap.to(bar.current, { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: true } })));
+    return () => {
+      cancel();
+      tween?.scrollTrigger?.kill();
+      tween?.kill();
+    };
   });
 
   return (

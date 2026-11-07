@@ -32,17 +32,22 @@ export function SplitReveal({ as: Tag = "h2", type = "chars", trigger = "scroll"
         }
         let split: SplitText | undefined;
         const play = () => {
-          split = SplitText.create(ref.current!, { type: type === "lines" ? "lines" : `words,${type}`, mask: type === "lines" ? "lines" : "words" });
+          const onLoad = trigger === "mount";
+          // on load the text must stay visible (it is the largest paint), so it only rises and settles
+          split = SplitText.create(ref.current!, {
+            type: type === "lines" ? "lines" : `words,${type}`,
+            mask: onLoad ? undefined : type === "lines" ? "lines" : "words",
+          });
           const targets = type === "chars" ? split.chars : type === "words" ? split.words : split.lines;
           gsap.from(targets, {
-            yPercent: 110,
-            rotate: type === "chars" ? 6 : 0,
-            opacity: 0,
-            duration: 1.1,
-            stagger: type === "chars" ? 0.03 : 0.08,
-            ease: "expo.out",
+            yPercent: onLoad ? 35 : 110,
+            rotate: type === "chars" ? (onLoad ? 4 : 6) : 0,
+            opacity: onLoad ? 1 : 0,
+            duration: onLoad ? 0.8 : 1.1,
+            stagger: type === "chars" ? (onLoad ? 0.02 : 0.03) : 0.08,
+            ease: onLoad ? "back.out(2)" : "expo.out",
             delay,
-            scrollTrigger: trigger === "scroll" ? { trigger: ref.current, start: "top 85%" } : undefined,
+            scrollTrigger: onLoad ? undefined : { trigger: ref.current, start: "top 85%" },
           });
         };
         // splitting is costly; for scroll reveals do it just before the element nears the screen

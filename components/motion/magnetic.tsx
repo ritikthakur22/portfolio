@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import { DESKTOP_MOTION, registerGsap } from "@/lib/motion";
+import { DESKTOP_MOTION, registerGsap, whenIdle } from "@/lib/motion";
 
 export function Magnetic({ strength = 0.3, children }: { strength?: number; children: React.ReactNode }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -11,6 +11,7 @@ export function Magnetic({ strength = 0.3, children }: { strength?: number; chil
     const gsap = registerGsap();
     const el = ref.current!;
     const mm = gsap.matchMedia();
+    const cancel = whenIdle(() =>
     mm.add(DESKTOP_MOTION, () => {
       const x = gsap.quickTo(el, "x", { duration: 0.3, ease: "power3" });
       const y = gsap.quickTo(el, "y", { duration: 0.3, ease: "power3" });
@@ -26,8 +27,12 @@ export function Magnetic({ strength = 0.3, children }: { strength?: number; chil
         el.removeEventListener("pointermove", move);
         el.removeEventListener("pointerleave", leave);
       };
-    });
-    return () => mm.revert();
+    }),
+    );
+    return () => {
+      cancel();
+      mm.revert();
+    };
   });
 
   return (

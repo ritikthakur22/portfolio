@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import { MOTION_OK, registerGsap, ScrollTrigger } from "@/lib/motion";
+import { MOTION_OK, registerGsap, ScrollTrigger, whenIdle } from "@/lib/motion";
 import { wrapOffset } from "@/lib/motion-math";
 
 /** Giant text band whose speed and direction follow scroll velocity. */
@@ -12,6 +12,7 @@ export function Marquee({ words, reverse = false, ...rest }: { words: string[]; 
   useGSAP(() => {
     const gsap = registerGsap();
     const mm = gsap.matchMedia();
+    const cancel = whenIdle(() =>
     mm.add(MOTION_OK, () => {
       let x = 0;
       let dir = reverse ? -1 : 1;
@@ -43,8 +44,12 @@ export function Marquee({ words, reverse = false, ...rest }: { words: string[]; 
         ro.disconnect();
         io.disconnect();
       };
-    });
-    return () => mm.revert();
+    }),
+    );
+    return () => {
+      cancel();
+      mm.revert();
+    };
   });
 
   const line = words.map((w, i) => (

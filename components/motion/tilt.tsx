@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import { DESKTOP_MOTION, registerGsap } from "@/lib/motion";
+import { DESKTOP_MOTION, registerGsap, whenIdle } from "@/lib/motion";
 
 /** 3D tilt toward the cursor with a soft accent spotlight under it. */
 export function Tilt({ max = 16, className = "", children, ...rest }: { max?: number } & React.HTMLAttributes<HTMLDivElement>) {
@@ -12,6 +12,7 @@ export function Tilt({ max = 16, className = "", children, ...rest }: { max?: nu
     const gsap = registerGsap();
     const el = ref.current!;
     const mm = gsap.matchMedia();
+    const cancel = whenIdle(() =>
     mm.add(DESKTOP_MOTION, () => {
       const move = (e: PointerEvent) => {
         const b = el.getBoundingClientRect();
@@ -28,8 +29,12 @@ export function Tilt({ max = 16, className = "", children, ...rest }: { max?: nu
         el.removeEventListener("pointermove", move);
         el.removeEventListener("pointerleave", leave);
       };
-    });
-    return () => mm.revert();
+    }),
+    );
+    return () => {
+      cancel();
+      mm.revert();
+    };
   });
 
   return (
