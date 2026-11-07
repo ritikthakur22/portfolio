@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { Providers } from "@/components/providers";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
+import { PaletteLoader } from "@/components/ui/palette-loader";
 import { profile } from "@/content/profile";
 import { jsonLdScript, personJsonLd, SITE_TITLE, SITE_URL } from "@/lib/seo";
 import "./globals.css";
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Footer />
           <Curtain />
           <ChatLauncher />
+          <PaletteLoader />
         </Providers>
       </body>
     </html>
