@@ -14,7 +14,7 @@ test("person structured data", () => {
   expect(p["@type"]).toBe("Person");
   expect(p.jobTitle).toBeTruthy();
   expect(p.alumniOf.name).toContain("Advanced College of Engineering");
-  expect(p.sameAs).toEqual(expect.arrayContaining(["https://github.com/ritikthakur22", "https://www.linkedin.com/in/ritik-thakur-a82b73412"]));
+  expect(p.sameAs).toEqual(expect.arrayContaining(["https://github.com/ritikthakur22", "https://www.linkedin.com/in/ritikthakur22"]));
   expect(JSON.stringify(p)).not.toContain("telephone");
 });
 

@@ -11,7 +11,7 @@ export const profile = {
   availability: "Open to remote freelance & full-time roles · Nepal & international",
   socials: [
     { label: "GitHub", href: "https://github.com/ritikthakur22" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/ritik-thakur-a82b73412" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/ritikthakur22" },
     { label: "Email", href: "mailto:contact@ritikthakur.com.np" },
   ] satisfies Link[],
   resumePath: "/resume.pdf" as const,
