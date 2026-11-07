@@ -21,3 +21,9 @@ test("opening a project plays the curtain then navigates", async ({ page }) => {
   await expect(page).toHaveURL(/\/projects\/fastshare$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("FastShare");
 });
+
+test("project screenshots are served, including non-featured projects", async ({ request }) => {
+  for (const path of ["/projects/todo/1.webp", "/projects/guptrix/1.webp", "/projects/eskool/1.webp"]) {
+    expect((await request.get(path)).status(), path).toBe(200);
+  }
+});

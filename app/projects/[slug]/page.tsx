@@ -71,7 +71,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           </div>
         </header>
 
-        <Reveal className="mt-16 flex gap-5 overflow-x-auto pb-4">
+        <Reveal className="mt-16 flex gap-5 overflow-x-auto pb-4" tabIndex={0} role="region" aria-label={`${project.name} screenshots`}>
           {project.images.map((src, k) => (
             <div
               key={src}

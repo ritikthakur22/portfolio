@@ -143,27 +143,31 @@ export function ChatLauncher() {
 
   return (
     <>
-      <button
-        ref={button}
-        type="button"
-        aria-label="Open chat: ask about Ritik"
-        aria-expanded={open}
-        aria-controls="chat-panel"
-        data-wave={wave}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle())}
-        className="fixed z-[70] size-16 cursor-grab touch-none rounded-full active:cursor-grabbing"
-        style={style}
-      >
-        <BotIcon ref={svg} pupils={pupils} lids={lids} hand={hand} />
+      <div className="fixed z-[70] size-16" style={style}>
+        <button
+          ref={button}
+          type="button"
+          aria-label="Open chat: ask about Ritik"
+          aria-expanded={open}
+          aria-controls="chat-panel"
+          data-wave={wave}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle())}
+          className="size-16 cursor-grab touch-none rounded-full active:cursor-grabbing"
+        >
+          <BotIcon ref={svg} pupils={pupils} lids={lids} hand={hand} />
+        </button>
         {(hint || wave) && (
-          <span className="pointer-events-none absolute top-1/2 right-[74px] -translate-y-1/2 rounded-full border border-border bg-surface px-3 py-1.5 font-mono text-xs whitespace-nowrap text-text">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute top-1/2 right-[74px] -translate-y-1/2 rounded-full border border-border bg-surface px-3 py-1.5 font-mono text-xs whitespace-nowrap text-text"
+          >
             {wave ? "Hey there! You found me." : "Ask me about Ritik"}
           </span>
         )}
-      </button>
+      </div>
       {loaded && <ChatWidget open={open} anchor={button} onClose={() => (toggle(false), button.current?.focus())} />}
     </>
   );

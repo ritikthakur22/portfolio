@@ -2,7 +2,7 @@
 
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import { MOTION_OK, registerGsap, SplitText } from "@/lib/motion";
+import { MOTION_OK, registerGsap, ScrollTrigger, SplitText } from "@/lib/motion";
 
 type Props = {
   as?: "h1" | "h2" | "h3" | "p" | "span" | "div";
@@ -30,19 +30,25 @@ export function SplitReveal({ as: Tag = "h2", type = "chars", trigger = "scroll"
             sessionStorage.setItem(onceKey, "1");
           } catch {}
         }
-        const split = SplitText.create(ref.current!, { type: type === "lines" ? "lines" : `words,${type}`, mask: type === "lines" ? "lines" : "words" });
-        const targets = type === "chars" ? split.chars : type === "words" ? split.words : split.lines;
-        gsap.from(targets, {
-          yPercent: 110,
-          rotate: type === "chars" ? 6 : 0,
-          opacity: 0,
-          duration: 1.1,
-          stagger: type === "chars" ? 0.03 : 0.08,
-          ease: "expo.out",
-          delay,
-          scrollTrigger: trigger === "scroll" ? { trigger: ref.current, start: "top 85%" } : undefined,
-        });
-        return () => split.revert();
+        let split: SplitText | undefined;
+        const play = () => {
+          split = SplitText.create(ref.current!, { type: type === "lines" ? "lines" : `words,${type}`, mask: type === "lines" ? "lines" : "words" });
+          const targets = type === "chars" ? split.chars : type === "words" ? split.words : split.lines;
+          gsap.from(targets, {
+            yPercent: 110,
+            rotate: type === "chars" ? 6 : 0,
+            opacity: 0,
+            duration: 1.1,
+            stagger: type === "chars" ? 0.03 : 0.08,
+            ease: "expo.out",
+            delay,
+            scrollTrigger: trigger === "scroll" ? { trigger: ref.current, start: "top 85%" } : undefined,
+          });
+        };
+        // splitting is costly; for scroll reveals do it just before the element nears the screen
+        if (trigger === "mount") play();
+        else ScrollTrigger.create({ trigger: ref.current, start: "top bottom+=300", once: true, onEnter: play });
+        return () => split?.revert();
       });
       return () => mm.revert();
     },

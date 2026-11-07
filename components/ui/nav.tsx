@@ -25,8 +25,9 @@ export function Nav() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-bg/70 backdrop-blur-md">
       <div ref={bar} className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent" aria-hidden />
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-8">
-        <Link href="/" className="font-display text-2xl font-extrabold tracking-tight" aria-label="Ritik Thakur, home">
+        <Link href="/" className="font-display text-2xl font-extrabold tracking-tight">
           RT<span className="text-accent">.</span>
+          <span className="sr-only"> Ritik Thakur, home</span>
         </Link>
         <nav aria-label="Main" className="flex items-center gap-2 sm:gap-6">
           <ul className="hidden items-center gap-6 text-sm text-muted md:flex">
@@ -42,7 +43,7 @@ export function Nav() {
             id="palette-trigger"
             type="button"
             className="rounded-md border border-border bg-surface px-2 py-1 font-mono text-xs text-muted transition-colors hover:text-text"
-            aria-label="Open command palette"
+            aria-label="Ctrl K, open command palette"
           >
             Ctrl K
           </button>

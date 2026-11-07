@@ -12,7 +12,7 @@ export async function Footer() {
   return (
     <footer className="overflow-hidden border-t border-border px-4 pt-24 pb-10 sm:px-8">
       <div className="mx-auto max-w-7xl">
-        <SplitReveal as="p" type="words" className="font-display text-[clamp(56px,15vw,240px)] leading-[0.85] font-extrabold tracking-[-0.05em] uppercase">
+        <SplitReveal as="h2" type="words" className="font-display text-[clamp(56px,15vw,240px)] leading-[0.85] font-extrabold tracking-[-0.05em] uppercase">
           Ritik <span className="text-accent">Thakur</span>
         </SplitReveal>
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4 font-mono text-sm text-muted">
