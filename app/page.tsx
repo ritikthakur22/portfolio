@@ -7,6 +7,7 @@ import { Hero } from "@/components/sections/hero";
 import { MoreProjects } from "@/components/sections/more-projects";
 import { ProjectsShowcase } from "@/components/sections/projects-showcase";
 import { Skills } from "@/components/sections/skills";
+import { ContactForm } from "@/components/ui/contact-form";
 
 export default function Home() {
   return (
@@ -20,7 +21,9 @@ export default function Home() {
       <Skills />
       <Marquee reverse words={["Ship it", "Test it", "Deploy it", "Repeat"]} />
       <GithubActivity />
-      <ContactSection />
+      <ContactSection>
+        <ContactForm />
+      </ContactSection>
     </>
   );
 }

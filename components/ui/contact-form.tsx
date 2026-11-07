@@ -1,0 +1,138 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { validateContact, type ContactData, type ContactErrors } from "@/lib/validate";
+
+declare global {
+  interface Window {
+    turnstile?: { render: (el: HTMLElement, opts: Record<string, unknown>) => string; reset: (id?: string) => void };
+  }
+}
+
+const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+type Status = "idle" | "sending" | "sent" | "error";
+
+const field =
+  "w-full rounded-xl border border-border bg-surface px-4 py-3 text-base text-text placeholder:text-muted outline-none transition-colors focus:border-accent aria-[invalid=true]:border-red-400";
+
+export function ContactForm() {
+  const [values, setValues] = useState<ContactData>({ name: "", email: "", message: "" });
+  const [errors, setErrors] = useState<ContactErrors>({});
+  const [status, setStatus] = useState<Status>("idle");
+  const [note, setNote] = useState("");
+  const startedAt = useRef(0);
+  const captcha = useRef<HTMLDivElement>(null);
+  const widget = useRef<string | undefined>(undefined);
+  const token = useRef("");
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
+
+  // load Turnstile only when the form is about to be seen
+  useEffect(() => {
+    if (!SITE_KEY || !captcha.current) return;
+    const el = captcha.current;
+    const io = new IntersectionObserver(([en]) => {
+      if (!en.isIntersecting) return;
+      io.disconnect();
+      const render = () => {
+        widget.current = window.turnstile?.render(el, {
+          sitekey: SITE_KEY,
+          theme: document.documentElement.classList.contains("light") ? "light" : "dark",
+          callback: (t: string) => (token.current = t),
+          "expired-callback": () => (token.current = ""),
+        });
+      };
+      if (window.turnstile) return render();
+      const s = document.createElement("script");
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      s.async = true;
+      s.onload = render;
+      document.head.appendChild(s);
+    }, { rootMargin: "300px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const set = (k: keyof ContactData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setValues((v) => ({ ...v, [k]: e.target.value }));
+    if (errors[k]) setErrors((er) => ({ ...er, [k]: undefined }));
+  };
+
+  async function onSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const v = validateContact(values);
+    if (!v.ok) return setErrors(v.errors);
+    setStatus("sending");
+    setNote("");
+    try {
+      const form = e.currentTarget;
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...v.data, company: (form.elements.namedItem("company") as HTMLInputElement).value, startedAt: startedAt.current, turnstileToken: token.current }),
+      });
+      const data = (await res.json()) as { ok?: boolean; error?: string; errors?: ContactErrors };
+      if (res.ok && data.ok) {
+        setStatus("sent");
+        setValues({ name: "", email: "", message: "" });
+      } else {
+        if (data.errors) setErrors(data.errors);
+        setStatus("error");
+        setNote(data.error ?? "Check the highlighted fields.");
+      }
+    } catch {
+      setStatus("error");
+      setNote("Couldn't reach the server. Check your connection and try again.");
+    }
+    if (widget.current) window.turnstile?.reset(widget.current);
+    token.current = "";
+  }
+
+  const err = (k: keyof ContactData) =>
+    errors[k] && (
+      <p id={`${k}-error`} className="mt-2 text-sm text-red-400">
+        {errors[k]}
+      </p>
+    );
+  const aria = (k: keyof ContactData) => ({ "aria-invalid": !!errors[k], "aria-describedby": errors[k] ? `${k}-error` : undefined });
+
+  return (
+    <form onSubmit={onSubmit} noValidate aria-label="Contact form" className="space-y-5 rounded-3xl border border-border bg-surface/80 p-6 backdrop-blur sm:p-8">
+      <div>
+        <label htmlFor="name" className="mb-2 block text-sm text-muted">
+          Name
+        </label>
+        <input id="name" name="name" autoComplete="name" value={values.name} onChange={set("name")} className={field} {...aria("name")} />
+        {err("name")}
+      </div>
+      <div>
+        <label htmlFor="email" className="mb-2 block text-sm text-muted">
+          Email
+        </label>
+        <input id="email" name="email" type="email" autoComplete="email" value={values.email} onChange={set("email")} className={field} {...aria("email")} />
+        {err("email")}
+      </div>
+      <div>
+        <label htmlFor="message" className="mb-2 block text-sm text-muted">
+          Message
+        </label>
+        <textarea id="message" name="message" rows={5} value={values.message} onChange={set("message")} className={`${field} resize-y`} {...aria("message")} />
+        {err("message")}
+      </div>
+      {/* hidden from people; bots that fill every field get caught */}
+      <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor="company">Company</label>
+        <input id="company" name="company" tabIndex={-1} autoComplete="off" defaultValue="" />
+      </div>
+      <div ref={captcha} />
+      <button type="submit" disabled={status === "sending"} className="w-full rounded-full bg-accent px-6 py-3.5 font-medium text-accent-ink transition-opacity disabled:opacity-60">
+        {status === "sending" ? "Sending…" : "Send message"}
+      </button>
+      <p role="status" aria-live="polite" className={`text-sm ${status === "error" ? "text-red-400" : "text-accent"}`}>
+        {status === "sent" ? "Message sent. I'll reply within 48 hours." : status === "error" ? note : ""}
+      </p>
+    </form>
+  );
+}
