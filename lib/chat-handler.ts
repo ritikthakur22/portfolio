@@ -11,6 +11,18 @@ const unsafe = (reply: string) => reply.includes("```") || reply.replace(/\D/g, 
 const MAX_CHARS = 500;
 const KEEP = 6;
 
+const GREETING = /^(hi+|hello+|hey+|hiya|yo|namaste|namaskar|good (morning|afternoon|evening|day)|sup|what'?s up)\b[\s!.,?]*(there|bot)?[\s!.,?]*$/i;
+const THANKS = /^(thanks|thank you|thx|ty|ok(ay)?|cool|great|nice|awesome)\b.*$/i;
+
+/** Instant replies for greetings and thanks, so small talk never reaches a model (or gets refused). */
+export function smallTalkReply(text: string): string | null {
+  const t = text.trim();
+  if (t.length > 40) return null;
+  if (GREETING.test(t)) return "Hi! I'm Ritik's portfolio assistant. Ask me about his projects, skills, experience or how to get in touch.";
+  if (THANKS.test(t)) return "You're welcome! Anything else you'd like to know about Ritik?";
+  return null;
+}
+
 function parse(body: unknown): ChatMessage[] | null {
   const messages = (body as { messages?: unknown })?.messages;
   if (!Array.isArray(messages) || messages.length === 0) return null;
@@ -24,6 +36,8 @@ export async function handleChat(body: unknown, ip: string, deps: { providers: P
   const messages = parse(body);
   if (!messages) return { status: 400, body: { error: `Messages must be 1 to ${MAX_CHARS} characters.` } };
   if (!deps.allow(ip)) return { status: 429, body: { error: "You're sending messages quickly. Try again in a minute." } };
+  const quick = smallTalkReply(messages[messages.length - 1].content);
+  if (quick) return { status: 200, body: { reply: quick } };
   if (deps.guard) {
     try {
       if (await deps.guard(messages[messages.length - 1].content)) return { status: 200, body: { reply: REFUSAL } };

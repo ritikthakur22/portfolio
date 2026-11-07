@@ -18,3 +18,11 @@ test("prompt includes the exact refusal sentence and any GitHub repos passed in"
   expect(p).toContain(REFUSAL);
   expect(p).toContain("Echo_Loop");
 });
+
+test("prompt explains pronouns, small talk, unknown details, Nepal time and interests", () => {
+  const p = buildSystemPrompt([], "Saturday, 7 November 2026, 3:15 PM");
+  expect(p).toMatch(/he, him, his/i);
+  expect(p).toMatch(/don't have that detail/i);
+  expect(p).toContain("Saturday, 7 November 2026, 3:15 PM");
+  expect(p).toMatch(/Interests:/);
+});

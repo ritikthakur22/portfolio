@@ -1,7 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { FALLBACK_REPLY, handleChat, type Provider } from "@/lib/chat-handler";
 
-const msgs = (n: number, content = "hi") => Array.from({ length: n }, (_, i) => ({ role: i % 2 ? "assistant" : "user", content }) as const);
+const msgs = (n: number, content = "Tell me about his apps") => Array.from({ length: n }, (_, i) => ({ role: i % 2 ? "assistant" : "user", content }) as const);
 const ok = (text: string): Provider => vi.fn(async () => text);
 const fail = (): Provider => vi.fn(async () => { throw Object.assign(new Error("rate limited"), { statusCode: 429 }); });
 const allowAll = () => true;
@@ -64,4 +64,18 @@ test("replies containing code are replaced with the refusal", async () => {
 test("replies leaking the phone number are refused", async () => {
   const r = await handleChat({ messages: msgs(1) }, "ip", { providers: [ok("Call 9840239154")], allow: allowAll });
   expect(r.body).toEqual({ reply: REFUSAL });
+});
+
+import { smallTalkReply } from "@/lib/chat-handler";
+
+test("greetings and thanks get a friendly reply without calling a model", async () => {
+  for (const hi of ["hi", "Hello!", "hey", "namaste", "good morning", "hii"]) {
+    const p = ok("x");
+    const r = await handleChat({ messages: msgs(1, hi) }, "ip", { providers: [p], allow: allowAll });
+    expect(r.status).toBe(200);
+    expect((r.body as { reply: string }).reply).not.toBe(REFUSAL);
+    expect(p).not.toHaveBeenCalled();
+  }
+  expect(smallTalkReply("thanks a lot")).toMatch(/welcome/i);
+  expect(smallTalkReply("what is his hobby")).toBeNull();
 });

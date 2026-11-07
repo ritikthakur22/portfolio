@@ -65,6 +65,14 @@ export const profile = {
     { name: "Security", items: ["Linux hardening", "Android kernels", "End-to-end encryption"] },
     { name: "Systems & Tools", items: ["Linux", "Bash", "ADB", "Android Studio", "VS Code", "Visual Studio", "Gradle"] },
   ] satisfies SkillGroup[],
+  // from Ritik's own GitHub profile README; used by the chatbot only
+  interests: [
+    "Gaming",
+    "Exploring applied AI, LLM tools and the systems that make software dependable",
+    "Linux, VPS self-hosting and operating-system internals",
+    "Building open-source apps across Android, web and C#",
+    "Data structures and algorithms",
+  ],
   stats: [
     { value: "5", label: "shipped projects" },
     { value: "3", label: "apps on Google Play" },

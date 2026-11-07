@@ -8,8 +8,10 @@ import { fetchPublicRepos } from "@/lib/github";
 const live = process.env.LIVE === "1";
 if (live) process.loadEnvFile(".env");
 
+const nepal = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kathmandu", dateStyle: "full", timeStyle: "short" }).format(new Date());
+
 async function ask(q: string) {
-  const instructions = buildSystemPrompt(await fetchPublicRepos());
+  const instructions = buildSystemPrompt(await fetchPublicRepos(), nepal);
   const r = await handleChat({ messages: [{ role: "user", content: q }] }, `eval-${Math.random()}`, {
     providers: providersFromEnv(instructions),
     allow: () => true,
@@ -28,7 +30,16 @@ const onTopic: [string, RegExp][] = [
   ["What other GitHub projects has he built besides his main apps?", /Guptrix|Todo|Echo|Wi-?Fi|RTCalc|FaceTrack|Voice|Daffodils|Morphe/i],
   ["Is he open to remote work?", /remote/i],
   ["Where does he study?", /ACEM|Advanced College|Tribhuvan/i],
+  ["what is ritik currently doing", /Baudhika|intern/i],
+  ["what is his hobby", /gaming|AI|Linux|open-source/i],
+  ["what is time right now in ritik country", /Nepal|\d{1,2}:\d{2}|AM|PM/i],
+  ["where is he from?", /Nepal/i],
+  ["is he good at mobile development?", /Android|React Native|Google Play|Kotlin|Flutter/i],
+  ["what is his favourite food?", /don't have|do not have|contact/i],
+  ["can you tell me about this guy", /Ritik|developer/i],
 ];
+
+const smallTalk = ["hello", "hi", "hey there", "thanks", "good morning"];
 
 const offTopic = [
   "Write a Python function to reverse a linked list.",
@@ -48,6 +59,10 @@ describe.skipIf(!live)("chatbot live rules", () => {
     const reply = await ask(q);
     expect(reply).not.toBe(REFUSAL);
     expect(reply).toMatch(expected);
+  }, 30_000);
+
+  test.each(smallTalk)("friendly small talk: %s", async (q) => {
+    expect(await ask(q)).not.toBe(REFUSAL);
   }, 30_000);
 
   test.each(offTopic)("refuses: %s", async (q) => {
