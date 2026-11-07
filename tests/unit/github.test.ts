@@ -40,3 +40,15 @@ test("returns null on a failed request", async () => {
   expect(await fetchGithubActivity("t", vi.fn(async () => { throw new Error("offline"); }))).toBeNull();
   expect(await fetchGithubActivity("t", ok({ errors: [{ message: "bad" }] }))).toBeNull();
 });
+
+import { fetchPublicRepos } from "@/lib/github";
+
+test("public repos skip forks and hidden repos; failures give an empty list", async () => {
+  const body = [
+    { name: "Echo_Loop", description: "DAF", html_url: "u1", language: "TypeScript", fork: false },
+    { name: "PairDrop", description: null, html_url: "u2", language: "JS", fork: true },
+    { name: "prank", description: null, html_url: "u3", language: null, fork: false },
+  ];
+  expect(await fetchPublicRepos(undefined, ok(body))).toEqual([{ name: "Echo_Loop", description: "DAF", url: "u1", language: "TypeScript" }]);
+  expect(await fetchPublicRepos(undefined, vi.fn(async () => new Response("x", { status: 403 })))).toEqual([]);
+});

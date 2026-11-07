@@ -12,6 +12,7 @@
     "e2e": "playwright test"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.113",
     "@ai-sdk/groq": "^4.0.77",
     "@gsap/react": "^2.1.2",
     "@openrouter/ai-sdk-provider": "^3.1.0",

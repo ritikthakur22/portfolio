@@ -49,3 +49,19 @@ export async function fetchGithubActivity(token: string | undefined, fetchImpl: 
     return null;
   }
 }
+
+/** Public, non-fork repos for the chatbot's facts. Works without a token (60 requests/hour), so results are cached. */
+export async function fetchPublicRepos(token?: string, fetchImpl: typeof fetch = fetch) {
+  try {
+    const res = await fetchImpl("https://api.github.com/users/ritikthakur22/repos?per_page=100&sort=pushed", {
+      headers: { Accept: "application/vnd.github+json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    });
+    if (!res.ok) return [];
+    const repos = (await res.json()) as { name: string; description: string | null; html_url: string; language: string | null; fork: boolean }[];
+    return repos
+      .filter((r) => !r.fork && !HIDDEN.has(r.name))
+      .map((r) => ({ name: r.name, description: r.description ?? "", url: r.html_url, language: r.language ?? "" }));
+  } catch {
+    return [];
+  }
+}

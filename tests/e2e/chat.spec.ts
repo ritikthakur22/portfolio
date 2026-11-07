@@ -45,3 +45,10 @@ test("chat shows the fallback when no AI keys are set", async ({ page }) => {
   await page.getByRole("button", { name: "What has he built?" }).click();
   await expect(page.getByRole("dialog", { name: "Chat about Ritik" })).toContainText(/resting|eSkool/);
 });
+
+for (const path of ["/projects/eskool", "/no-such-page"]) {
+  test(`chat launcher is available on ${path}`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.getByRole("button", { name: "Open chat: ask about Ritik" })).toBeVisible();
+  });
+}
