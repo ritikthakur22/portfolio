@@ -1,4 +1,5 @@
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
+import { Curtain } from "@/components/motion/curtain";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { Providers } from "@/components/providers";
 import { Footer } from "@/components/ui/footer";
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Nav />
           <main id="main">{children}</main>
           <Footer />
+          <Curtain />
         </Providers>
       </body>
     </html>

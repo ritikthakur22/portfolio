@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { PinnedHorizontal } from "@/components/motion/pinned-horizontal";
 import { Tilt } from "@/components/motion/tilt";
+import { TransitionLink } from "@/components/ui/transition-link";
 import { featuredProjects } from "@/content/projects";
 import { SectionHeading } from "./section-heading";
 
@@ -14,7 +14,7 @@ export function ProjectsShowcase() {
       <PinnedHorizontal>
         {featuredProjects.map((p) => (
           <Tilt key={p.slug} className="w-full shrink-0 rounded-[28px] border border-border bg-surface md:w-[min(78vw,980px)]">
-            <Link href={`/projects/${p.slug}`} className="grid h-full gap-8 overflow-hidden rounded-[28px] p-7 sm:p-10 md:grid-cols-[1.25fr_1fr] md:items-center">
+            <TransitionLink href={`/projects/${p.slug}`} label={p.name} className="grid h-full gap-8 overflow-hidden rounded-[28px] p-7 sm:p-10 md:grid-cols-[1.25fr_1fr] md:items-center">
               <div className="relative z-20">
                 <p className="text-sm text-muted">{p.platforms.join(", ")}</p>
                 <h3 className="mt-3 font-display text-[clamp(40px,5vw,72px)] leading-none font-extrabold tracking-[-0.03em]">{p.name}</h3>
@@ -32,7 +32,7 @@ export function ProjectsShowcase() {
               <div className="relative mx-auto aspect-[9/16] w-48 overflow-hidden rounded-[28px] border-8 border-surface-2 bg-surface-2 sm:w-56">
                 <Image src={p.image} alt={`${p.name} screenshot`} fill sizes="224px" className="object-cover object-top" />
               </div>
-            </Link>
+            </TransitionLink>
           </Tilt>
         ))}
       </PinnedHorizontal>
