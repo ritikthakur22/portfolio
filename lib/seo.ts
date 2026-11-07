@@ -4,6 +4,7 @@ import type { Project } from "@/content/types";
 
 export const SITE_URL = "https://www.ritikthakur.com.np";
 export const SITE_TITLE = "Ritik Thakur | Software Developer, Web & Mobile Apps";
+export const TAB_TITLE = "Ritik Portfolio";
 const sameAs = profile.socials.filter((s) => s.href.startsWith("https")).map((s) => s.href);
 
 export function personJsonLd() {

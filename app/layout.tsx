@@ -8,7 +8,7 @@ import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { PaletteLoader } from "@/components/ui/palette-loader";
 import { profile } from "@/content/profile";
-import { jsonLdScript, personJsonLd, SITE_TITLE, SITE_URL } from "@/lib/seo";
+import { jsonLdScript, personJsonLd, SITE_TITLE, SITE_URL, TAB_TITLE } from "@/lib/seo";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({ variable: "--font-display", subsets: ["latin"], weight: ["500", "700", "800"] });
@@ -17,7 +17,7 @@ const mono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: SITE_TITLE, template: "%s | Ritik Thakur" },
+  title: { default: TAB_TITLE, template: `%s | ${TAB_TITLE}` },
   description: profile.summary,
   applicationName: "Ritik Thakur",
   authors: [{ name: profile.name, url: SITE_URL }],
