@@ -20,5 +20,5 @@ jobs:
       - run: npm test
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
-      - name: Lighthouse (95+ in every category)
+      - name: Lighthouse (95+ accessibility, best practices, SEO; performance warns below 90)
         run: CHROME_PATH=$(node -e 'console.log(require("@playwright/test").chromium.executablePath())') npx lhci autorun
