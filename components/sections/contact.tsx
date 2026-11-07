@@ -1,5 +1,6 @@
 import { DotGrid } from "@/components/motion/dot-grid";
 import { SplitReveal } from "@/components/motion/split-reveal";
+import { SocialIcon } from "@/components/ui/social-icon";
 import { profile } from "@/content/profile";
 
 export function ContactSection({ children }: { children?: React.ReactNode }) {
@@ -17,12 +18,18 @@ export function ContactSection({ children }: { children?: React.ReactNode }) {
           <a href={`mailto:${profile.email}`} className="mt-8 inline-block font-display text-2xl font-bold underline decoration-accent underline-offset-8 sm:text-3xl">
             {profile.email}
           </a>
-          <ul className="mt-8 flex gap-6 text-muted">
+          <ul className="mt-8 flex flex-wrap gap-3">
             {profile.socials
               .filter((s) => s.label !== "Email")
               .map((s) => (
                 <li key={s.label}>
-                  <a href={s.href} target="_blank" rel="noreferrer" className="hover:text-accent">
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface px-5 py-2.5 transition-colors hover:border-accent hover:text-accent"
+                  >
+                    <SocialIcon label={s.label} className="size-5" />
                     {s.label}
                   </a>
                 </li>

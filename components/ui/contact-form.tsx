@@ -104,21 +104,21 @@ export function ContactForm() {
         <label htmlFor="name" className="mb-2 block text-sm text-muted">
           Name
         </label>
-        <input id="name" name="name" autoComplete="name" value={values.name} onChange={set("name")} className={field} {...aria("name")} />
+        <input id="name" name="name" autoComplete="name" placeholder="Your name" value={values.name} onChange={set("name")} className={field} {...aria("name")} />
         {err("name")}
       </div>
       <div>
         <label htmlFor="email" className="mb-2 block text-sm text-muted">
           Email
         </label>
-        <input id="email" name="email" type="email" autoComplete="email" value={values.email} onChange={set("email")} className={field} {...aria("email")} />
+        <input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" value={values.email} onChange={set("email")} className={field} {...aria("email")} />
         {err("email")}
       </div>
       <div>
         <label htmlFor="message" className="mb-2 block text-sm text-muted">
           Message
         </label>
-        <textarea id="message" name="message" rows={5} value={values.message} onChange={set("message")} className={`${field} resize-y`} {...aria("message")} />
+        <textarea id="message" name="message" rows={5} placeholder="Tell me about your project, the role, or your question." value={values.message} onChange={set("message")} className={`${field} resize-y`} {...aria("message")} />
         {err("message")}
       </div>
       {/* hidden from people; bots that fill every field get caught */}

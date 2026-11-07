@@ -41,8 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# local planning notes
-.superpowers/
 
 # test output
 /test-results/

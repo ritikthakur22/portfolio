@@ -1,6 +1,7 @@
 import { cacheLife } from "next/cache";
 import { SplitReveal } from "@/components/motion/split-reveal";
 import { profile } from "@/content/profile";
+import { SocialIcon } from "./social-icon";
 
 async function year() {
   "use cache";
@@ -19,7 +20,12 @@ export async function Footer() {
           <ul className="flex flex-wrap gap-6">
             {profile.socials.map((s) => (
               <li key={s.label}>
-                <a href={s.href} className="transition-colors hover:text-accent" {...(s.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>
+                <a
+                  href={s.href}
+                  className="inline-flex items-center gap-2 transition-colors hover:text-accent"
+                  {...(s.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+                >
+                  <SocialIcon label={s.label} />
                   {s.label === "Email" ? profile.email : s.label}
                 </a>
               </li>
