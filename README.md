@@ -7,6 +7,7 @@
 <p align="center">
   <a href="https://www.ritikthakur.com.np"><img src="https://img.shields.io/badge/live-ritikthakur.com.np-2dd4bf?style=for-the-badge&labelColor=0b0d0e" alt="Live site"></a>
   <a href="https://github.com/ritikthakur22/portfolio/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/ritikthakur22/portfolio/ci.yml?style=for-the-badge&label=CI&labelColor=0b0d0e" alt="CI status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge&labelColor=0b0d0e" alt="MIT License"></a>
 </p>
 
 <p align="center">
@@ -118,4 +119,4 @@ Pushes to `main` deploy to Vercel automatically. Add the environment variables i
 
 ## License
 
-All rights reserved. The code is public so you can see how it works; please don't reuse the design or content as your own portfolio.
+Distributed under the [MIT License](LICENSE).
